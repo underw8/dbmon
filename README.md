@@ -231,17 +231,31 @@ This package includes automated publishing via GitHub Actions.
    - Name: `NPM_TOKEN`
    - Value: Your NPM access token
 
-### Creating Releases
+### Publishing Process
 
 1. Update version in `package.json`
 2. Commit and push changes
-3. Create a new release on GitHub:
-   - Go to Releases → Create a new release
-   - Tag version: `v1.0.0` (matching package.json)
-   - Title: `Release v1.0.0`
-   - Publish release
+3. Create and push a version tag using semantic versioning:
 
-The GitHub Action will automatically publish to NPM when the release is published.
+   ```bash
+   # For patch releases (bug fixes)
+   git tag v1.0.1
+   git push origin v1.0.1
+
+   # For minor releases (new features)
+   git tag v1.1.0
+   git push origin v1.1.0
+
+   # For major releases (breaking changes)
+   git tag v2.0.0
+   git push origin v2.0.0
+   ```
+
+The GitHub Action will automatically:
+
+- Extract the version from the tag (e.g., `v1.1.0` → `1.1.0`)
+- Update `package.json` with the correct version
+- Publish to NPM with the tag-based version
 
 ## Contributing
 
