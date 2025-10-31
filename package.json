@@ -1,16 +1,7 @@
 {
-  "name": "dbmon",
+  "name": "@underw8/dbmon",
   "version": "1.0.0",
   "description": "Real-time database monitoring tool for PostgreSQL, MariaDB, and SQL Server with health checks, uptime tracking, and CSV export capabilities",
-  "main": "index.js",
-  "type": "module",
-  "bin": {
-    "dbmon": "./index.js"
-  },
-  "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "keywords": [
     "database",
     "monitoring",
@@ -23,29 +14,39 @@
     "real-time",
     "cli-tool"
   ],
-  "author": "@underw8",
-  "license": "ISC",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/underw8/dbmon.git"
-  },
   "homepage": "https://github.com/underw8/dbmon#readme",
   "bugs": {
     "url": "https://github.com/underw8/dbmon/issues"
   },
-  "engines": {
-    "node": ">=22.0.0"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/underw8/dbmon.git"
+  },
+  "license": "ISC",
+  "author": "@underw8",
+  "type": "module",
+  "main": "index.js",
+  "bin": {
+    "dbmon": "index.js"
   },
   "files": [
     "index.js",
     "database.js",
     "README.md"
   ],
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "dependencies": {
     "chalk": "^5.6.2",
     "inquirer": "^12.10.0",
     "mssql": "^12.0.0",
     "mysql2": "^3.15.3",
     "pg": "^8.16.3"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=22.0.0"
   }
 }

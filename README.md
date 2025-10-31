@@ -31,9 +31,9 @@ npx dbmon
 ### Via NPM (after publishing)
 
 ```bash
-npm install -g dbmon
+npm install -g @underw8/dbmon
 # or
-pnpm add -g dbmon
+pnpm add -g @underw8/dbmon
 ```
 
 ## First-Time Setup
