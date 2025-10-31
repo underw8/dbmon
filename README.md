@@ -38,14 +38,23 @@ pnpm add -g @underw8/dbmon
 
 ## First-Time Setup
 
-On first run, if `config.json` doesn't exist, DBMon will automatically offer to generate it from `config.json.example`:
+On first run, if `config.json` doesn't exist, DBMon will offer to generate it from `config.json.example`:
 
 ```bash
-npx dbmon
-# Will prompt: "Would you like to generate config.json from the example? (Y/n)"
+npx @underw8/dbmon
+# Will show security warning and prompt: "Would you like to generate config.json from the example? (y/N)"
 ```
 
 After generation, edit `config.json` to match your database server configurations.
+
+## Security Warning
+
+⚠️ **IMPORTANT**: Database passwords are stored in plain text in the configuration file!
+
+- Ensure `config.json` has proper file permissions (e.g., `chmod 600 config.json`)
+- Never commit configuration files containing real passwords to version control
+- Consider using environment variables or a secure credential store for production deployments
+- The application will display security warnings when loading configuration files
 
 ## Configuration
 
@@ -125,8 +134,20 @@ pnpm start
 node index.js
 
 # Via npx (if published to npm)
-npx dbmon
+npx @underw8/dbmon
+
+# With custom config file
+node index.js --config my-config.json
+npx @underw8/dbmon --config /path/to/config.json
+
+# Show help
+node index.js --help
 ```
+
+## Command Line Options
+
+- `-c, --config <file>`: Specify a custom config file path (default: `config.json`)
+- `-h, --help`: Show help message and usage information
 
 The application will:
 

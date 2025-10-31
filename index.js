@@ -7,7 +7,37 @@ import inquirer from "inquirer";
 import chalk from "chalk";
 import { performHealthCheck } from "./database.js";
 
-const CONFIG_FILE = "config.json";
+let CONFIG_FILE = "config.json";
+
+// Parse command line arguments
+function parseArgs() {
+  const args = process.argv.slice(2);
+  for (let i = 0; i < args.length; i++) {
+    if (args[i] === "--config" || args[i] === "-c") {
+      if (i + 1 < args.length) {
+        CONFIG_FILE = args[i + 1];
+        i++; // Skip the next argument
+      }
+    } else if (args[i] === "--help" || args[i] === "-h") {
+      console.log(`
+DBMon - Database Monitor
+
+Usage:
+  dbmon [options]
+
+Options:
+  -c, --config <file>    Specify config file path (default: config.json)
+  -h, --help            Show this help message
+
+Examples:
+  dbmon
+  dbmon --config my-config.json
+  dbmon -c /path/to/config.json
+`);
+      process.exit(0);
+    }
+  }
+}
 
 async function loadConfig() {
   try {
@@ -29,12 +59,26 @@ async function loadConfig() {
           )
         );
 
+        // Add password exposure warning
+        console.log();
+        console.log(
+          chalk.red.bold(
+            "⚠️  WARNING: Database passwords will be stored in plain text in the config file!"
+          )
+        );
+        console.log(
+          chalk.red.bold(
+            "⚠️  Ensure the config file is properly secured and not committed to version control."
+          )
+        );
+        console.log();
+
         const answers = await inquirer.prompt([
           {
             type: "confirm",
             name: "generateConfig",
             message: "Would you like to generate config.json from the example?",
-            default: true,
+            default: false, // Changed from true to false to be less aggressive
           },
         ]);
 
@@ -354,10 +398,26 @@ async function monitorServers(servers, serverStates, sessionData) {
 let isShuttingDown = false;
 
 async function main() {
+  // Parse command line arguments first
+  parseArgs();
+
   console.log(chalk.bold.blue("DBMon - Database Monitor"));
   console.log();
 
   const config = await loadConfig();
+
+  // Add password exposure warning for existing configs too
+  console.log(
+    chalk.red.bold(
+      "⚠️  SECURITY WARNING: Config file contains database passwords in plain text!"
+    )
+  );
+  console.log(
+    chalk.red.bold(
+      "⚠️  Ensure this file is properly secured and not committed to version control."
+    )
+  );
+  console.log();
 
   if (config.length === 0) {
     console.log(
