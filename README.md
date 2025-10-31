@@ -38,12 +38,23 @@ pnpm add -g @underw8/dbmon
 
 ## First-Time Setup
 
-On first run, if `config.json` doesn't exist, DBMon will offer to generate it from `config.json.example`:
+On first run, if `config.json` doesn't exist, DBMon will offer to generate a basic configuration file:
 
 ```bash
 npx @underw8/dbmon
-# Will show security warning and prompt: "Would you like to generate config.json from the example? (y/N)"
+# Will show security warning and prompt: "Would you like to generate a basic config.json file? (Y/n)"
 ```
+
+DBMon will:
+
+- Use `config.json.example` if it exists (for detailed examples)
+- Generate a basic template with all supported database types if no example file is found
+
+The generated template includes examples for:
+
+- **PostgreSQL** (port 5432, postgres user)
+- **MariaDB/MySQL** (port 3306, root user)
+- **SQL Server** (port 1433, sa user)
 
 After generation, edit `config.json` to match your database server configurations.
 

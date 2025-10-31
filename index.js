@@ -46,92 +46,102 @@ async function loadConfig() {
   } catch (error) {
     // Check if config.json doesn't exist but config.json.example does
     if (error.code === "ENOENT") {
-      const exampleConfigFile = "config.json.example";
-      try {
-        await fs.promises.access(exampleConfigFile);
-        // config.json.example exists, offer to copy it
-        console.log(
-          chalk.yellow(`Configuration file '${CONFIG_FILE}' not found.`)
-        );
-        console.log(
-          chalk.blue(
-            `Found '${exampleConfigFile}' - this contains sample configuration.`
-          )
-        );
+      console.log(
+        chalk.yellow(`Configuration file '${CONFIG_FILE}' not found.`)
+      );
 
-        // Add password exposure warning
-        console.log();
-        console.log(
-          chalk.red.bold(
-            "⚠️  WARNING: Database passwords will be stored in plain text in the config file!"
-          )
-        );
-        console.log(
-          chalk.red.bold(
-            "⚠️  Ensure the config file is properly secured and not committed to version control."
-          )
-        );
-        console.log();
+      // Add password exposure warning
+      console.log();
+      console.log(
+        chalk.red.bold(
+          "⚠️  WARNING: Database passwords will be stored in plain text in the config file!"
+        )
+      );
+      console.log(
+        chalk.red.bold(
+          "⚠️  Ensure the config file is properly secured and not committed to version control."
+        )
+      );
+      console.log();
 
-        const answers = await inquirer.prompt([
-          {
-            type: "confirm",
-            name: "generateConfig",
-            message: "Would you like to generate config.json from the example?",
-            default: false, // Changed from true to false to be less aggressive
-          },
-        ]);
+      const answers = await inquirer.prompt([
+        {
+          type: "confirm",
+          name: "generateConfig",
+          message: "Would you like to generate a basic config.json file?",
+          default: true,
+        },
+      ]);
 
-        if (answers.generateConfig) {
-          const exampleData = await fs.promises.readFile(
-            exampleConfigFile,
-            "utf8"
-          );
-          await fs.promises.writeFile(CONFIG_FILE, exampleData);
+      if (answers.generateConfig) {
+        // Check if example config exists
+        let configData;
+
+        try {
+          await fs.promises.access(exampleConfigFile);
+          // Use example config if available
+          configData = await fs.promises.readFile(exampleConfigFile, "utf8");
           console.log(
-            chalk.green(`✓ Generated ${CONFIG_FILE} from ${exampleConfigFile}`)
+            chalk.blue(`✓ Generated ${CONFIG_FILE} from ${exampleConfigFile}`)
           );
-          console.log(
-            chalk.blue(
-              "You can now edit config.json to customize your database connections."
-            )
+        } catch (exampleError) {
+          // Create basic template if example doesn't exist
+          configData = JSON.stringify(
+            [
+              {
+                name: "PostgreSQL Database",
+                type: "postgres",
+                host: "localhost",
+                port: 5432,
+                database: "postgres",
+                username: "postgres",
+                password: "password",
+                requireSSL: false,
+                disabled: false,
+              },
+              {
+                name: "MariaDB Database",
+                type: "mariadb",
+                host: "localhost",
+                port: 3306,
+                database: "mysql",
+                username: "root",
+                password: "password",
+                requireSSL: false,
+                disabled: false,
+              },
+              {
+                name: "SQL Server Database",
+                type: "sqlserver",
+                host: "localhost",
+                port: 1433,
+                database: "master",
+                username: "sa",
+                password: "Password123!",
+                requireSSL: false,
+                disabled: false,
+              },
+            ],
+            null,
+            2
           );
-          return JSON.parse(exampleData);
-        } else {
-          console.log(
-            chalk.yellow(
-              "Please create config.json manually or run this command again to generate it."
-            )
-          );
-          process.exit(0);
+          console.log(chalk.blue(`✓ Generated basic ${CONFIG_FILE} template`));
         }
-      } catch (exampleError) {
-        // Neither config.json nor config.json.example exists
-        console.error(
-          chalk.red(`Configuration file '${CONFIG_FILE}' not found.`)
-        );
-        console.error(
-          chalk.yellow(
-            "Please create config.json with your database server configurations."
+
+        await fs.promises.writeFile(CONFIG_FILE, configData);
+        console.log(
+          chalk.green(
+            "You can now edit config.json to customize your database connections."
           )
         );
-        console.error(chalk.gray("Example configuration format:"));
-        console.error(
-          chalk.gray(`[
-  {
-    "name": "My Database",
-    "type": "postgres",
-    "host": "localhost",
-    "port": 5432,
-    "database": "mydb",
-    "username": "user",
-    "password": "password",
-    "requireSSL": false,
-    "disabled": false
-  }
-]`)
+        return JSON.parse(configData);
+      } else {
+        console.log(
+          chalk.yellow(
+            "Please create config.json manually or run this command again to generate it."
+          )
         );
-        process.exit(1);
+        process.exit(0);
       }
     } else {
       // config.json exists but has parsing error
