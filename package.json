@@ -23,8 +23,24 @@
     "real-time",
     "cli-tool"
   ],
-  "author": "",
+  "author": "@underw8",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/underw8/dbmon.git"
+  },
+  "homepage": "https://github.com/underw8/dbmon#readme",
+  "bugs": {
+    "url": "https://github.com/underw8/dbmon/issues"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "files": [
+    "index.js",
+    "database.js",
+    "README.md"
+  ],
   "dependencies": {
     "chalk": "^5.6.2",
     "inquirer": "^12.10.0",

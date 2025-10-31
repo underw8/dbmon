@@ -16,8 +16,24 @@ A powerful real-time database monitoring tool for PostgreSQL, MariaDB, and SQL S
 
 ## Installation
 
+### Local Development
+
 ```bash
 pnpm install
+```
+
+### Via NPX
+
+```bash
+npx dbmon
+```
+
+### Via NPM (after publishing)
+
+```bash
+npm install -g dbmon
+# or
+pnpm add -g dbmon
 ```
 
 ## First-Time Setup
@@ -174,6 +190,45 @@ The CSV export is useful for:
 - Reporting and SLA tracking
 - Performance trend analysis
 - Incident investigation
+
+## Publishing to NPM
+
+This package includes automated publishing via GitHub Actions.
+
+### Setup GitHub Secrets
+
+1. Generate an NPM token:
+
+   ```bash
+   npm login
+   # Follow the prompts to create an access token
+   ```
+
+2. Add `NPM_TOKEN` to your GitHub repository secrets:
+   - Go to your repository Settings → Secrets and variables → Actions
+   - Click "New repository secret"
+   - Name: `NPM_TOKEN`
+   - Value: Your NPM access token
+
+### Creating Releases
+
+1. Update version in `package.json`
+2. Commit and push changes
+3. Create a new release on GitHub:
+   - Go to Releases → Create a new release
+   - Tag version: `v1.0.0` (matching package.json)
+   - Title: `Release v1.0.0`
+   - Publish release
+
+The GitHub Action will automatically publish to NPM when the release is published.
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test locally with `pnpm start`
+5. Submit a pull request
 
 ## Requirements
 
